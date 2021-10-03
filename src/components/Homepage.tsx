@@ -1,14 +1,24 @@
-import React from 'react';
+import React, {MouseEvent} from 'react';
 import Dropzone from 'react-dropzone'
 import type { DropzoneOptions } from 'react-dropzone'
 import Intro from './Intro'
-import { Row, Col, Alert, Card } from 'react-bootstrap'
+import {Row, Col, Alert, Card, Form, FormCheck} from 'react-bootstrap'
 
 type Props = {
   onUpload: DropzoneOptions["onDrop"],
+  touchScreenMode: boolean,
+  setTouchScreenMode: (touchScreenMode: boolean) => void,
 }
 
 function Homepage(props: Props) {
+
+  const handleModeChange = (event : any) => {
+    const target = event.target
+    const touchScreenMode : boolean = target.checked
+    props.setTouchScreenMode(touchScreenMode)
+  }
+
+  const touchScreenChecked = props.touchScreenMode
   return <>
     <Intro />
     <Row>
@@ -34,6 +44,26 @@ function Homepage(props: Props) {
         <Card>
           <Card.Header as="h3">Step 2</Card.Header>
           <Card.Body style={{minHeight: '12em'}}>
+            <Card.Text>
+              Choose your options:
+              <Form>
+                <Form.Check
+                  type={'checkbox'}
+                  id={'touchScreenMode'}
+                  label={'Touch Screen Mode'}
+                  onChange={handleModeChange}
+                  checked={touchScreenChecked}
+                  />
+              </Form>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+
+      <Col>
+        <Card>
+          <Card.Header as="h3">Step 3</Card.Header>
+          <Card.Body style={{minHeight: '12em'}}>
             <Dropzone onDrop={props.onUpload} accept='.ros,.rosz'>
               {({ getRootProps, getInputProps }) => (
                 <Alert variant='primary' {...getRootProps()} style={{ textAlign: 'center' }}>
@@ -48,7 +78,7 @@ function Homepage(props: Props) {
       </Col>
       <Col>
         <Card>
-          <Card.Header as="h3">Step 3</Card.Header>
+          <Card.Header as="h3">Step 4</Card.Header>
           <Card.Body style={{minHeight: '12em'}}>
             <Card.Text>
               Print your datasheets out, and never forget an ability again!

@@ -17,6 +17,7 @@ type Props = {
   operatives: Operative[],
   psychicPowers: PsychicPower[],
   onClose: (event: MouseEvent<HTMLButtonElement>) => void,
+  touchScreenMode: boolean,
 };
 
 const groupByDatacard = (operatives: Operative[]): Datacard[] => {
@@ -38,6 +39,9 @@ export function Roster(props: Props) {
   };
   const datacards = groupByDatacard(props.operatives)
   const factionSpecificData = getFactionSpecificData(props.faction)
+  console.log(`Touch: ${props.touchScreenMode}` )
+  const carouselClassName = props.touchScreenMode ? "d-block" : "d-block d-xl-none"
+  const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-none d-xl-block"
 
   return <>
     <h1 style={headingStyle}>
@@ -48,7 +52,7 @@ export function Roster(props: Props) {
         <CloseButton onClose={props.onClose}/>
       </Col>
     </h1>
-    <Carousel className="d-block d-xl-none" interval={null} touch={true} controls={true} indicators={false}>
+    <Carousel className={carouselClassName} interval={null} touch={true} controls={true} indicators={false}>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
           <Carousel.Item>
             <Datasheet datacard={datacard}/>
@@ -99,7 +103,7 @@ export function Roster(props: Props) {
       </Carousel.Item>
       }
     </Carousel>
-    <div className="d-none d-xl-block">
+    <div className={ nonCarouselClassName }>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
             <Datasheet datacard={datacard}/>
       ))}
