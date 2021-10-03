@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react';
-import { Col, Card } from 'react-bootstrap';
+import { Col, Card, Carousel } from 'react-bootstrap';
 import { CloseButton } from '../CloseButton';
 import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021';
 import { Datasheet } from './Datasheet';
@@ -10,8 +10,6 @@ import { TacOpsList } from './TacOpsList';
 import hash from 'node-object-hash'
 import _ from 'lodash'
 import getFactionSpecificData from './data'
-import { ResponsiveCarousel } from "../ResponsiveCarousel"
-import { ResponsiveCarouselItem } from "../ResponsiveCarouselItem"
 
 type Props = {
   name: string,
@@ -50,29 +48,29 @@ export function Roster(props: Props) {
         <CloseButton onClose={props.onClose}/>
       </Col>
     </h1>
-    <ResponsiveCarousel>
+    <Carousel className="d-block d-xl-none" interval={null} touch={true} controls={true} indicators={false}>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
-          <ResponsiveCarouselItem>
+          <Carousel.Item>
             <Datasheet datacard={datacard}/>
-          </ResponsiveCarouselItem>
+          </Carousel.Item>
       ))}
-      <ResponsiveCarouselItem>
+      <Carousel.Item>
         <Card>
           <Card.Header style={{...headingStyle, breakBefore: 'always'}} as="h2">Rules</Card.Header>
           <Card.Body>
             <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')}/>
           </Card.Body>
         </Card>
-      </ResponsiveCarouselItem>
-      {props.psychicPowers.length > 0 && <ResponsiveCarouselItem><Card>
+      </Carousel.Item>
+      {props.psychicPowers.length > 0 && <Carousel.Item><Card>
         <Card.Header style={{...headingStyle}} as="h2">Psychic Powers</Card.Header>
         <Card.Body>
           <PowerList powers={props.psychicPowers}/>
         </Card.Body>
-      </Card></ResponsiveCarouselItem>}
+      </Card></Carousel.Item>}
 
       {factionSpecificData &&
-      <ResponsiveCarouselItem>
+      <Carousel.Item>
         <div>
           <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
             <Card style={{width: "100%", marginRight: "5px"}}>
@@ -98,8 +96,54 @@ export function Roster(props: Props) {
               </Card>
           }
         </div>
-      </ResponsiveCarouselItem>
+      </Carousel.Item>
       }
-    </ResponsiveCarousel>
+    </Carousel>
+    <div className="d-none d-xl-block">
+      {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
+            <Datasheet datacard={datacard}/>
+      ))}
+        <Card>
+          <Card.Header style={{...headingStyle, breakBefore: 'always'}} as="h2">Rules</Card.Header>
+          <Card.Body>
+            <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')}/>
+          </Card.Body>
+        </Card>
+      {props.psychicPowers.length > 0 && <Card>
+        <Card.Header style={{...headingStyle}} as="h2">Psychic Powers</Card.Header>
+        <Card.Body>
+          <PowerList powers={props.psychicPowers}/>
+        </Card.Body>
+      </Card>
+      }
+
+      {factionSpecificData &&
+        <div>
+          <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
+            <Card style={{width: "100%", marginRight: "5px"}}>
+              <Card.Header style={{...headingStyle}} as="h2">Strategic Ploys</Card.Header>
+              <Card.Body>
+                <PloysColumn ploys={factionSpecificData.strategicPloys} />
+              </Card.Body>
+            </Card>
+            <Card style={{width: "100%", marginLeft: "5px"}}>
+              <Card.Header style={{...headingStyle}} as="h2">Tactical Ploys</Card.Header>
+              <Card.Body>
+                <PloysColumn ploys={factionSpecificData.tacticalPloys} />
+              </Card.Body>
+            </Card>
+          </div>
+          {
+            factionSpecificData.tacOps &&
+            <Card>
+              <Card.Header style={{...headingStyle}} as="h2">Tac Ops</Card.Header>
+              <Card.Body>
+                <TacOpsList tacOps={factionSpecificData.tacOps} />
+              </Card.Body>
+            </Card>
+          }
+        </div>
+      }
+    </div>
   </>
 }
