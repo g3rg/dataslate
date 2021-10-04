@@ -40,7 +40,7 @@ export function Roster(props: Props) {
   };
   const datacards = groupByDatacard(props.operatives)
   const factionSpecificData = getFactionSpecificData(props.faction)
-  console.log(`Touch: ${props.touchScreenMode}` )
+
   const carouselClassName = props.touchScreenMode ? "d-block" : "d-none"
   const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-block"
 

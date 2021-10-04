@@ -1,7 +1,7 @@
-import React, {useState, MouseEvent} from 'react';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone'
 import type { DropzoneOptions } from 'react-dropzone'
-import {Row, Col, Alert, Card, Form, Button} from 'react-bootstrap'
+import {Row, Col, Alert, Card, Button} from 'react-bootstrap'
 import Intro from './Intro'
 import SettingsDialog from "./SettingsDialog"
 
