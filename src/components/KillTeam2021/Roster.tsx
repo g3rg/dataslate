@@ -18,6 +18,7 @@ type Props = {
   psychicPowers: PsychicPower[],
   onClose: (event: MouseEvent<HTMLButtonElement>) => void,
   touchScreenMode: boolean,
+  showWoundTrack: boolean
 };
 
 const groupByDatacard = (operatives: Operative[]): Datacard[] => {
@@ -40,8 +41,8 @@ export function Roster(props: Props) {
   const datacards = groupByDatacard(props.operatives)
   const factionSpecificData = getFactionSpecificData(props.faction)
   console.log(`Touch: ${props.touchScreenMode}` )
-  const carouselClassName = props.touchScreenMode ? "d-block" : "d-block d-xl-none"
-  const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-none d-xl-block"
+  const carouselClassName = props.touchScreenMode ? "d-block" : "d-none"
+  const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-block"
 
   return <>
     <h1 style={headingStyle}>
@@ -55,7 +56,7 @@ export function Roster(props: Props) {
     <Carousel className={carouselClassName} interval={null} touch={true} controls={true} indicators={false}>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
           <Carousel.Item>
-            <Datasheet datacard={datacard}/>
+            <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
           </Carousel.Item>
       ))}
       <Carousel.Item>
@@ -105,7 +106,7 @@ export function Roster(props: Props) {
     </Carousel>
     <div className={ nonCarouselClassName }>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
-            <Datasheet datacard={datacard}/>
+            <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
       ))}
         <Card>
           <Card.Header style={{...headingStyle, breakBefore: 'always'}} as="h2">Rules</Card.Header>

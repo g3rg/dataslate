@@ -14,7 +14,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 type Props = {
-  datacard: Datacard
+  datacard: Datacard,
+  showWoundTrack: boolean,
 };
 
 export function Datasheet(props: Props) {
@@ -31,7 +32,7 @@ export function Datasheet(props: Props) {
       <Card.Body>
         <Row>
           <Col sm="10">
-            <WoundTracks wounds={props.datacard.stats.wounds} names={props.datacard.operativeNames} />
+            { props.showWoundTrack && <WoundTracks wounds={props.datacard.stats.wounds} names={props.datacard.operativeNames} /> }
             <WeaponList weapons={props.datacard.weapons} />
             <Row>
               <Col>

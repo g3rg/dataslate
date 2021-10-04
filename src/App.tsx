@@ -11,6 +11,7 @@ export function App() {
 
   const [roster, setRoster] = useState<Roster2018|Roster2021|null>(null)
   const [touchScreenMode, setTouchScreenMode] = useState(false)
+  const [showWoundTrack, setShowWoundTrack] = useState(true)
 
   const handleUpload = async (acceptedFiles: File[]) => {
     const r = await loadFiles(acceptedFiles);
@@ -39,9 +40,9 @@ export function App() {
 
   return (
     <Container fluid='lg'>
-      {roster === null ? <Homepage onUpload={handleUpload} setTouchScreenMode={setTouchScreenMode} touchScreenMode={touchScreenMode}/> : <></>}
+      {roster === null ? <Homepage onUpload={handleUpload} setTouchScreenMode={setTouchScreenMode} touchScreenMode={touchScreenMode} setShowWoundTrack={setShowWoundTrack} showWoundTrack={showWoundTrack}/> : <></>}
       {roster && isRosterKT18(roster) ? <RosterView2018 name={roster.name} models={roster.models} onClose={handleClose} forceRules={roster.forceRules} onSelectionChanged={handleSelectionChanged} /> : <></>}
-      {roster && isRosterKT21(roster) ? <RosterView2021 name={roster.name} operatives={roster.operatives} psychicPowers={roster.psychicPowers} faction={roster.faction} onClose={handleClose} touchScreenMode={touchScreenMode} /> : <></>}
+      {roster && isRosterKT21(roster) ? <RosterView2021 name={roster.name} operatives={roster.operatives} psychicPowers={roster.psychicPowers} faction={roster.faction} onClose={handleClose} touchScreenMode={touchScreenMode} showWoundTrack={ showWoundTrack } /> : <></>}
     </Container>
   )
 }
