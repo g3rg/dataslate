@@ -1,5 +1,6 @@
 import React, { MouseEvent } from 'react';
-import { Col, Card, Carousel } from 'react-bootstrap';
+
+import { Col, Card, Carousel, Badge } from 'react-bootstrap';
 import { CloseButton } from '../CloseButton';
 import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021';
 import { Datasheet } from './Datasheet';
@@ -10,12 +11,14 @@ import { TacOpsList } from './TacOpsList';
 import hash from 'node-object-hash'
 import _ from 'lodash'
 import getFactionSpecificData from './data'
+import {ArchetypeBadge} from "./ArchetypeBadge";
 
 type Props = {
   name: string,
   faction: string,
   operatives: Operative[],
   psychicPowers: PsychicPower[],
+  fireteams: string[],
   onClose: (event: MouseEvent<HTMLButtonElement>) => void,
   touchScreenMode: boolean,
   showWoundTrack: boolean
@@ -41,8 +44,21 @@ export function Roster(props: Props) {
   const datacards = groupByDatacard(props.operatives)
   const factionSpecificData = getFactionSpecificData(props.faction)
 
+
   const carouselClassName = props.touchScreenMode ? "d-block" : "d-none"
   const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-block"
+
+  let archetypes = props.fireteams.map( (fireteam) => {
+    if (factionSpecificData !== null && factionSpecificData.fireteamArchetypeMap !== null) {
+      return (factionSpecificData.fireteamArchetypeMap[fireteam] as string[])
+    } else {
+      return null
+    }
+  }).filter( val =>  val !== null ).flat(1)
+
+  // Now remove duplicates
+  archetypes = (archetypes.filter( (item,index) => archetypes.indexOf(item) === index))
+  console.log(archetypes)
 
   return <>
     <h1 style={headingStyle}>
@@ -74,35 +90,41 @@ export function Roster(props: Props) {
         </Card.Body>
       </Card></Carousel.Item>}
 
+
       {factionSpecificData &&
       <Carousel.Item>
-        <div>
-          <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
-            <Card style={{width: "100%", marginRight: "5px"}}>
-              <Card.Header style={{...headingStyle}} as="h2">Strategic Ploys</Card.Header>
-              <Card.Body>
-                <PloysColumn ploys={factionSpecificData.strategicPloys} />
-              </Card.Body>
-            </Card>
-            <Card style={{width: "100%", marginLeft: "5px"}}>
-              <Card.Header style={{...headingStyle}} as="h2">Tactical Ploys</Card.Header>
-              <Card.Body>
-                <PloysColumn ploys={factionSpecificData.tacticalPloys} />
-              </Card.Body>
-            </Card>
-          </div>
-          {
-            factionSpecificData.tacOps &&
-              <Card>
-                <Card.Header style={{...headingStyle}} as="h2">Tac Ops</Card.Header>
-                <Card.Body>
-                  <TacOpsList tacOps={factionSpecificData.tacOps} />
-                </Card.Body>
-              </Card>
-          }
+      <div>
+        <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
+          <Card style={{width: "100%", marginRight: "5px"}}>
+            <Card.Header style={{...headingStyle}} as="h2">Strategic Ploys</Card.Header>
+            <Card.Body>
+              <PloysColumn ploys={factionSpecificData.strategicPloys} />
+            </Card.Body>
+          </Card>
+          <Card style={{width: "100%", marginLeft: "5px"}}>
+            <Card.Header style={{...headingStyle}} as="h2">Tactical Ploys</Card.Header>
+            <Card.Body>
+              <PloysColumn ploys={factionSpecificData.tacticalPloys} />
+            </Card.Body>
+          </Card>
         </div>
+      </div>
       </Carousel.Item>
       }
+      { ((factionSpecificData && factionSpecificData.tacOps) || (archetypes.length > 0)) &&
+      <Carousel.Item>
+        <Card>
+          <Card.Header style={{...headingStyle}} as="h2">Tac Ops</Card.Header>
+          <Card.Body>
+            { archetypes.length > 0 &&
+            <Card.Title>ARCHETYPES - {archetypes.map(archetype => { return <ArchetypeBadge archetype={archetype}/> } )}</Card.Title>}
+
+            { factionSpecificData && factionSpecificData.tacOps && <TacOpsList tacOps={factionSpecificData.tacOps} /> }
+          </Card.Body>
+        </Card>
+      </Carousel.Item>
+      }
+
     </Carousel>
     <div className={ nonCarouselClassName }>
       {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
@@ -122,6 +144,7 @@ export function Roster(props: Props) {
       </Card>
       }
 
+
       {factionSpecificData &&
         <div>
           <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
@@ -138,17 +161,19 @@ export function Roster(props: Props) {
               </Card.Body>
             </Card>
           </div>
-          {
-            factionSpecificData.tacOps &&
-            <Card>
-              <Card.Header style={{...headingStyle}} as="h2">Tac Ops</Card.Header>
-              <Card.Body>
-                <TacOpsList tacOps={factionSpecificData.tacOps} />
-              </Card.Body>
-            </Card>
-          }
         </div>
       }
+    { ((factionSpecificData && factionSpecificData.tacOps) || (archetypes.length > 0)) &&
+      <Card>
+        <Card.Header style={{...headingStyle}} as="h2">Tac Ops</Card.Header>
+        <Card.Body>
+          { archetypes.length > 0 &&
+            <Card.Title>ARCHETYPES - {archetypes.map(archetype => { return <ArchetypeBadge archetype={archetype}/> } )}</Card.Title>}
+
+          { factionSpecificData && factionSpecificData.tacOps && <TacOpsList tacOps={factionSpecificData.tacOps} /> }
+        </Card.Body>
+      </Card>
+    }
     </div>
   </>
 }

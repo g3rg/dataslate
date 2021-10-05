@@ -42,7 +42,8 @@ export function App() {
     <Container fluid='lg'>
       {roster === null ? <Homepage onUpload={handleUpload} setTouchScreenMode={setTouchScreenMode} touchScreenMode={touchScreenMode} setShowWoundTrack={setShowWoundTrack} showWoundTrack={showWoundTrack}/> : <></>}
       {roster && isRosterKT18(roster) ? <RosterView2018 name={roster.name} models={roster.models} onClose={handleClose} forceRules={roster.forceRules} onSelectionChanged={handleSelectionChanged} /> : <></>}
-      {roster && isRosterKT21(roster) ? <RosterView2021 name={roster.name} operatives={roster.operatives} psychicPowers={roster.psychicPowers} faction={roster.faction} onClose={handleClose} touchScreenMode={touchScreenMode} showWoundTrack={ showWoundTrack } /> : <></>}
+      {roster && isRosterKT21(roster) ? <RosterView2021 name={roster.name} operatives={roster.operatives} psychicPowers={roster.psychicPowers} faction={roster.faction} fireteams={roster.fireteams} onClose={handleClose} touchScreenMode={touchScreenMode} showWoundTrack={ showWoundTrack } /> : <></>}
+
     </Container>
   )
 }
