@@ -1,8 +1,8 @@
 import React, { MouseEvent } from 'react';
+import { Col, Card, Carousel } from 'react-bootstrap';
 
-import { Col, Card, Carousel, Badge } from 'react-bootstrap';
 import { CloseButton } from '../CloseButton';
-import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021';
+import {Operative, Datacard, PsychicPower, Archetype} from '../../types/KillTeam2021';
 import { Datasheet } from './Datasheet';
 import { RuleList } from './RuleList';
 import { PowerList } from './PowerList';
@@ -44,17 +44,12 @@ export function Roster(props: Props) {
   const datacards = groupByDatacard(props.operatives)
   const factionSpecificData = getFactionSpecificData(props.faction)
 
-
   const carouselClassName = props.touchScreenMode ? "d-block" : "d-none"
   const nonCarouselClassName = props.touchScreenMode ? "d-none" : "d-block"
 
-  let archetypes = props.fireteams.map( (fireteam) => {
-    if (factionSpecificData !== null && factionSpecificData.fireteamArchetypeMap !== null) {
-      return (factionSpecificData.fireteamArchetypeMap[fireteam] as string[])
-    } else {
-      return null
-    }
-  }).filter( val =>  val !== null ).flat(1)
+  let archetypes : Archetype[] = props.fireteams.flatMap( (fireteam) => {
+    return factionSpecificData?.archetypes[fireteam] as Archetype[] ?? null
+  }).filter( item => (item !== null) )
 
   // Now remove duplicates
   archetypes = (archetypes.filter( (item,index) => archetypes.indexOf(item) === index))
