@@ -5,7 +5,7 @@ import Intro from './Intro'
 import { Row, Col, Alert, Card, Button } from 'react-bootstrap'
 
 import SettingsDialog from './SettingsDialog'
-import { Settings } from '../types/KillTeam2021'
+import { Settings } from '../types/Settings'
 
 interface Props {
   onUpload: DropzoneOptions['onDrop']

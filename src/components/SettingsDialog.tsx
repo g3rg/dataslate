@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Modal, Col, Row } from 'react-bootstrap'
-import { Settings } from '../types/KillTeam2021'
+import { Settings } from '../types/Settings'
 
 interface Props {
   setShowSettings: (showSettings: boolean) => void

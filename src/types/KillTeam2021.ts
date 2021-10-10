@@ -105,9 +105,3 @@ export enum Archetype {
 export interface FireteamArchetypes {
   [key: string]: Archetype[]
 }
-
-export interface Settings {
-  touchscreenMode: boolean
-  showWoundTrack: boolean
-  dropboxSelector: boolean
-}

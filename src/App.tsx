@@ -5,7 +5,9 @@ import { Roster as RosterView2021 } from './components/KillTeam2021/Roster'
 import { Container } from 'react-bootstrap'
 import { loadFiles } from './FileLoader'
 import { Roster as Roster2018 } from './types/KillTeam2018'
-import { Roster as Roster2021, Settings } from './types/KillTeam2021'
+import { Roster as Roster2021 } from './types/KillTeam2021'
+import { Settings } from './types/Settings'
+
 import { DataDevPage } from './components/KillTeam2021/DataDevPage'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -27,9 +29,11 @@ export function App () {
   }
 
   const loadSettingsFromLocalStorage = (): Settings => {
-    const localSettings = JSON.parse(localStorage.getItem('settings') ?? '{ showWoundTrack: true, touchscreenMode: false, dropboxSelector: false }')
-    console.log(localSettings)
-    return localSettings
+    try {
+      return JSON.parse(localStorage.getItem('settings') ?? '{ showWoundTrack: true, touchscreenMode: false, dropboxSelector: false }')
+    } catch (e) {
+      return { showWoundTrack: true, touchscreenMode: false, dropboxSelector: false }
+    }
   }
 
   const handleUpload = async (acceptedFiles: File[]) => {
