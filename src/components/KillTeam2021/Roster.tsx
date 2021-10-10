@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react'
-import { Col, Card } from 'react-bootstrap'
+import {Col, Card, Carousel} from 'react-bootstrap'
 import { CloseButton } from '../CloseButton'
 import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021'
 import { Datasheet } from './Datasheet'
@@ -39,6 +39,9 @@ export function Roster (props: Props) {
   }
   const datacards = groupByDatacard(props.operatives)
 
+  const carouselClassName = props.touchscreenMode ? 'd-block' : 'd-none'
+  const nonCarouselClassName = props.touchscreenMode ? 'd-none' : 'd-block'
+
   return (
     <>
       <h1 style={headingStyle}>
@@ -49,23 +52,51 @@ export function Roster (props: Props) {
           <CloseButton onClose={props.onClose} />
         </Col>
       </h1>
-      {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
-        <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
-      ))}
-      <Card>
-        <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
-        <Card.Body>
-          <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
-        </Card.Body>
-      </Card>
-      {props.psychicPowers.length > 0 && <Card>
-        <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-        <Card.Body>
-          <PowerList powers={props.psychicPowers} />
-        </Card.Body>
-      </Card>}
+      <Carousel className={carouselClassName} interval={null} touch controls indicators={false}>
+        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
+            <Carousel.Item key={index}>
+              <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
+            </Carousel.Item>
+        ))}
+        <Carousel.Item>
+          <Card>
+            <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
+            <Card.Body>
+              <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
+            </Card.Body>
+          </Card>
+        </Carousel.Item>
+          {props.psychicPowers.length > 0 && <Carousel.Item>
+            <Card>
+              <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
+              <Card.Body>
+                <PowerList powers={props.psychicPowers} />
+              </Card.Body>
+            </Card>
+        </Carousel.Item>}
+        <Carousel.Item>
+          <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
+        </Carousel.Item>
+      </Carousel>
+      <div className={nonCarouselClassName}>
+        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
+          <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
+        ))}
+        <Card>
+          <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
+          <Card.Body>
+            <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
+          </Card.Body>
+        </Card>
+        {props.psychicPowers.length > 0 && <Card>
+          <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
+          <Card.Body>
+            <PowerList powers={props.psychicPowers} />
+          </Card.Body>
+        </Card>}
 
-      <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
+        <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
+      </div>
     </>
   )
 }
