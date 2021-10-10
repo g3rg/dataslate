@@ -31,7 +31,7 @@ export function Datasheet (props: Props) {
       <Card.Body>
         <Row>
           <Col sm='10'>
-            {props.showWoundTrack && <WoundTracks wounds={props.datacard.stats.wounds} names={props.datacard.operativeNames} /> }
+            {props.showWoundTrack && <WoundTracks wounds={props.datacard.stats.wounds} names={props.datacard.operativeNames} />}
             <WeaponList weapons={props.datacard.weapons} />
             <Row>
               <Col>

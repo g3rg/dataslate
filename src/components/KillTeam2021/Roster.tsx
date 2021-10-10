@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react'
-import {Col, Card, Carousel} from 'react-bootstrap'
+import { Col, Card, Carousel } from 'react-bootstrap'
 import { CloseButton } from '../CloseButton'
 import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021'
 import { Datasheet } from './Datasheet'
@@ -54,9 +54,9 @@ export function Roster (props: Props) {
       </h1>
       <Carousel className={carouselClassName} interval={null} touch controls indicators={false}>
         {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
-            <Carousel.Item key={index}>
-              <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
-            </Carousel.Item>
+          <Carousel.Item key={index}>
+            <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack} />
+          </Carousel.Item>
         ))}
         <Carousel.Item>
           <Card>
@@ -66,13 +66,13 @@ export function Roster (props: Props) {
             </Card.Body>
           </Card>
         </Carousel.Item>
-          {props.psychicPowers.length > 0 && <Carousel.Item>
-            <Card>
-              <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-              <Card.Body>
-                <PowerList powers={props.psychicPowers} />
-              </Card.Body>
-            </Card>
+        {props.psychicPowers.length > 0 && <Carousel.Item>
+          <Card>
+            <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
+            <Card.Body>
+              <PowerList powers={props.psychicPowers} />
+            </Card.Body>
+          </Card>
         </Carousel.Item>}
         <Carousel.Item>
           <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
@@ -80,7 +80,7 @@ export function Roster (props: Props) {
       </Carousel>
       <div className={nonCarouselClassName}>
         {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
-          <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack}/>
+          <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack} />
         ))}
         <Card>
           <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
