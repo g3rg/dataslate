@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Homepage from './components/Homepage'
 import { Roster as RosterView2018 } from './components/KillTeam2018/Roster'
 import { Roster as RosterView2021 } from './components/KillTeam2021/Roster'
@@ -13,6 +13,10 @@ export function App () {
   const [roster, setRoster] = useState<Roster2018|Roster2021|null>(null)
   const [settings, setSettings] = useState({ showWoundTrack: true, touchscreenMode: false, dropboxSelector: false })
 
+  useEffect(() => {
+    setSettings(loadSettingsFromLocalStorage())
+  }, [])
+
   const setAndSaveSettings = (settings: Settings) => {
     setSettings(settings)
     saveSettingsToLocalStorage(settings)
@@ -22,8 +26,10 @@ export function App () {
     localStorage.setItem('settings', JSON.stringify(settings))
   }
 
-  const loadSettingsFromLocalStorage = () => {
-    const localSettings = localStorage.getItem('settings')
+  const loadSettingsFromLocalStorage = (): Settings => {
+    const localSettings = JSON.parse(localStorage.getItem('settings') ?? '{ showWoundTrack: true, touchscreenMode: false, dropboxSelector: false }')
+    console.log(localSettings)
+    return localSettings
   }
 
   const handleUpload = async (acceptedFiles: File[]) => {
