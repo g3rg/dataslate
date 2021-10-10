@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 export function App () {
   const [roster, setRoster] = useState<Roster2018|Roster2021|null>(null)
+  const [settings, setSettings] = useState({ showWoundTrack: true, touchscreenMode: false })
 
   const handleUpload = async (acceptedFiles: File[]) => {
     const r = await loadFiles(acceptedFiles)
@@ -49,7 +50,7 @@ export function App () {
         </Route>
         <Route path='/'>
           <Container fluid='lg'>
-            {roster === null ? <Homepage onUpload={handleUpload} /> : <></>}
+            {roster === null ? <Homepage onUpload={handleUpload} settings={settings} setSettings={setSettings} /> : <></>}
             {(roster != null) && isRosterKT18(roster) ? <RosterView2018 name={roster.name} models={roster.models} onClose={handleClose} forceRules={roster.forceRules} onSelectionChanged={handleSelectionChanged} /> : <></>}
             {(roster != null) && isRosterKT21(roster) ? <RosterView2021 name={roster.name} operatives={roster.operatives} psychicPowers={roster.psychicPowers} faction={roster.faction} fireteams={roster.fireteams} onClose={handleClose} /> : <></>}
           </Container>
