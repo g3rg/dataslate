@@ -16,6 +16,8 @@ interface Props {
   psychicPowers: PsychicPower[]
   fireteams: string[]
   onClose: (event: MouseEvent<HTMLButtonElement>) => void
+  touchscreenMode: boolean
+  showWoundTrack: boolean
 }
 
 const groupByDatacard = (operatives: Operative[]): Datacard[] => {
