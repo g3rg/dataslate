@@ -10,6 +10,16 @@ interface Props {
 }
 
 function SettingsDialog (props: Props) {
+  const handleSelectorChange = (event: any) => {
+    const target = event.target
+    const dropboxSelector: boolean = target.checked
+    const newSettings = {
+      ...props.settings,
+      dropboxSelector: dropboxSelector
+    }
+    props.setSettings(newSettings)
+  }
+
   const handleModeChange = (event: any) => {
     const target = event.target
     const touchScreenMode: boolean = target.checked
@@ -43,13 +53,25 @@ function SettingsDialog (props: Props) {
       </Modal.Header>
       <Modal.Body>
         <Col>
+          <Row>Site Settings</Row>
+          <Row>
+            <Form>
+              <Form.Check
+                type='checkbox'
+                id='dropboxSelect'
+                label='DropBox Selector'
+                onChange={handleSelectorChange}
+                checked={props.settings.dropboxSelector}
+              />
+            </Form>
+          </Row>
           <Row>KT 2021 Settings</Row>
           <Row>
             <Form>
               <Form.Check
                 type='checkbox'
                 id='touchScreenMode'
-                label='Touch Screen Mode'
+                label='Touch Screen Mode (WIP)'
                 onChange={handleModeChange}
                 checked={props.settings.touchscreenMode}
               />

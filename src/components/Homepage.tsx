@@ -13,6 +13,20 @@ interface Props {
   setSettings: (settings: Settings) => void
 }
 
+function fileDropZone (props: Props) {
+  return (
+    <Dropzone onDrop={props.onUpload} accept='.ros,.rosz'>
+      {({ getRootProps, getInputProps }) => (
+        <Alert variant='primary' {...getRootProps()} style={{ textAlign: 'center' }}>
+          <input {...getInputProps()} />
+          <p>Drop your roster file here, or click to select one.</p>
+          <p><em>(*.rosz and *.ros accepted)</em></p>
+        </Alert>
+      )}
+    </Dropzone>
+  )
+}
+
 function Homepage (props: Props) {
   const [showSettings, setShowSettings] = useState(false)
 
@@ -50,15 +64,8 @@ function Homepage (props: Props) {
                 />
               </Card.Text>
               <Card.Text>
-                <Dropzone onDrop={props.onUpload} accept='.ros,.rosz'>
-                  {({ getRootProps, getInputProps }) => (
-                    <Alert variant='primary' {...getRootProps()} style={{ textAlign: 'center' }}>
-                      <input {...getInputProps()} />
-                      <p>Drop your roster file here, or click to select one.</p>
-                      <p><em>(*.rosz and *.ros accepted)</em></p>
-                    </Alert>
-                  )}
-                </Dropzone>
+                {!props.settings.dropboxSelector && fileDropZone(props)}
+                {props.settings.dropboxSelector && 'DROP BOX SELECTOR HERE'}
               </Card.Text>
             </Card.Body>
           </Card>
