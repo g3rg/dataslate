@@ -57,7 +57,7 @@ function Homepage (props: Props) {
             <Card.Header as='h3'>Step 2</Card.Header>
             <Card.Body style={{ minHeight: '12em' }}>
               <Card.Text>
-                <Button size='sm' variant='primary' onClick={() => setShowSettings(true)}>Settings</Button>
+                <span>Choose your <a href="#" onClick={() => setShowSettings(true)}>Settings</a></span>
                 <SettingsDialog
                   show={showSettings} setShowSettings={setShowSettings}
                   settings={props.settings} setSettings={props.setSettings}
