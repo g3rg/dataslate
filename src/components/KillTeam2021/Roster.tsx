@@ -94,7 +94,6 @@ export function Roster (props: Props) {
             <PowerList powers={props.psychicPowers} />
           </Card.Body>
         </Card>}
-
         <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
       </div>
     </>
