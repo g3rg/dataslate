@@ -99,6 +99,7 @@ const parseOperative = (model: Element): Operative => {
   const faction = _.intersection(allKeywords, factionKeywords).pop() || allKeywords.find((k) => (k === k.toUpperCase())) || null
   const keywords = _.remove(allKeywords, (x) => (x !== faction))
   const details = {
+    id: xpSelect('string(@id)', model, true).toString(),
     datacard: xpSelect('string(@name)', model, true).toString(),
     name: xpSelect('string(@customName)', model, true).toString(),
     stats: {
@@ -126,6 +127,8 @@ export const parseBattlescribeXML = (doc: Document): Roster => {
   const operatives = []
   const name = xpSelect('string(/bs:roster/@name)', doc, true).toString()
   const faction = xpSelect('string(//bs:force/@catalogueName)', doc, true).toString()
+  const isRoster = xpSelect('string(//bs:force/@name)', doc, true).toString() === 'Roster'
+
   for (const model of xpSelect('//bs:selection[@type=\'model\']', doc) as Element[]) {
     operatives.push(parseOperative(model))
   }
@@ -149,12 +152,14 @@ export const parseBattlescribeXML = (doc: Document): Roster => {
       o.name = o.datacard + ' ' + romanNumerals[counts[o.datacard]++]
     }
   }
+  console.log(`Is Roster? ${isRoster}`)
   return {
     system: 'KillTeam2021',
     name,
     faction,
     operatives,
     psychicPowers,
-    fireteams
+    fireteams,
+    isRoster
   }
 }

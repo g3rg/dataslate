@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react'
+import React, { MouseEvent, useEffect, useState } from 'react'
 import { Col, Card, Carousel } from 'react-bootstrap'
 import { CloseButton } from '../CloseButton'
 import { Operative, Datacard, PsychicPower } from '../../types/KillTeam2021'
@@ -8,6 +8,7 @@ import { PowerList } from './PowerList'
 import hash from 'node-object-hash'
 import _ from 'lodash'
 import { FactionSpecificData } from './FactionSpecificData'
+import { RosterSelection } from './RosterSelection'
 
 interface Props {
   name: string
@@ -17,15 +18,18 @@ interface Props {
   fireteams: string[]
   onClose: (event: MouseEvent<HTMLButtonElement>) => void
   touchscreenMode: boolean
+  isRoster?: boolean
   showWoundTrack: boolean
+  printRosterList: boolean
 }
 
-const groupByDatacard = (operatives: Operative[]): Datacard[] => {
-  const groupedOperatives = _.groupBy(operatives, (o) => (hash().hash({ datacard: o.datacard, weapons: o.weapons, equipment: o.equipment })))
+const groupByDatacard = (operatives: Operative[], selectedOperatives: string[]): Datacard[] => {
+  const filteredOperatives = operatives.filter((op) => { return selectedOperatives.includes(op.id) })
+  const groupedOperatives = _.groupBy(filteredOperatives, (o) => (hash().hash({ datacard: o.datacard, weapons: o.weapons, equipment: o.equipment })))
   return _.map(groupedOperatives, (ops, hash) => ({
     ...ops[0],
     name: ops[0].datacard,
-    operativeNames: ops.map((c) => (c.name)).sort()
+    operativeNames: ops.map((op) => (op.name)).sort()
   }))
 }
 
@@ -37,7 +41,20 @@ export function Roster (props: Props) {
     width: '100%',
     display: 'flex'
   }
-  const datacards = groupByDatacard(props.operatives)
+
+  const [selectedOperatives, setSelectedOperatives] = useState(props.operatives.map((operative, index) => { return operative.id }))
+  const [datacards, setDataCards] = useState<Datacard[] | []>([])
+
+  const updateSelectedOperatives = (operativeIds: string[]): void => {
+    setSelectedOperatives(operativeIds)
+    setDataCards(groupByDatacard(props.operatives, selectedOperatives))
+  }
+
+  useEffect(() => {
+    setDataCards(groupByDatacard(props.operatives, selectedOperatives))
+  }, [props.operatives, selectedOperatives])
+
+  const rosterClassName = props.printRosterList ? '' : 'noprint'
 
   const carouselClassName = props.touchscreenMode ? 'd-block' : 'd-none'
   const nonCarouselClassName = props.touchscreenMode ? 'd-none' : 'd-block'
@@ -53,6 +70,16 @@ export function Roster (props: Props) {
         </Col>
       </h1>
       <Carousel className={carouselClassName} interval={null} touch controls indicators={false}>
+        {(props.isRoster ?? false) && (
+          <Carousel.Item>
+            <Card className={rosterClassName}>
+              <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Roster</Card.Header>
+              <Card.Body>
+                <RosterSelection operatives={props.operatives} selectedOperatives={selectedOperatives} setSelectedOperatives={updateSelectedOperatives} />
+              </Card.Body>
+            </Card>
+          </Carousel.Item>
+        )}
         {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
           <Carousel.Item key={index}>
             <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack} />
@@ -66,21 +93,30 @@ export function Roster (props: Props) {
             </Card.Body>
           </Card>
         </Carousel.Item>
-        {props.psychicPowers.length > 0 && <Carousel.Item>
-          <Card>
-            <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-            <Card.Body>
-              <PowerList powers={props.psychicPowers} />
-            </Card.Body>
-          </Card>
-        </Carousel.Item>}
+        {props.psychicPowers.length > 0 &&
+          <Carousel.Item>
+            <Card>
+              <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
+              <Card.Body>
+                <PowerList powers={props.psychicPowers} />
+              </Card.Body>
+            </Card>
+          </Carousel.Item>}
         <Carousel.Item>
           <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
         </Carousel.Item>
       </Carousel>
       <div className={nonCarouselClassName}>
-        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
-          <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack} />
+        {(props.isRoster ?? false) && (
+          <Card className={rosterClassName}>
+            <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Roster</Card.Header>
+            <Card.Body>
+              <RosterSelection operatives={props.operatives} selectedOperatives={selectedOperatives} setSelectedOperatives={updateSelectedOperatives} />
+            </Card.Body>
+          </Card>
+        )}
+        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
+          <Datasheet key={index} datacard={datacard} showWoundTrack={props.showWoundTrack} />
         ))}
         <Card>
           <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
@@ -88,12 +124,13 @@ export function Roster (props: Props) {
             <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
           </Card.Body>
         </Card>
-        {props.psychicPowers.length > 0 && <Card>
-          <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-          <Card.Body>
-            <PowerList powers={props.psychicPowers} />
-          </Card.Body>
-        </Card>}
+        {props.psychicPowers.length > 0 &&
+          <Card>
+            <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
+            <Card.Body>
+              <PowerList powers={props.psychicPowers} />
+            </Card.Body>
+          </Card>}
         <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
       </div>
     </>

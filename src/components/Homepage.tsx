@@ -50,7 +50,7 @@ function Homepage (props: Props) {
                 </ul>
               </Card.Text>
               <Card.Text>
-                <span>And choose your <a href='#' onClick={() => setShowSettings(true)}>Settings</a></span>
+                <Button variant='outline-secondary' onClick={() => setShowSettings(true)}>Edit Display Settings</Button>
                 <SettingsDialog
                   show={showSettings} setShowSettings={setShowSettings}
                   settings={props.settings} setSettings={props.setSettings}

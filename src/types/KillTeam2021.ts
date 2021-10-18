@@ -58,6 +58,7 @@ export interface Equipment {
 }
 
 export interface Operative {
+  id: string
   datacard: string
   name: string
   stats: Stats
@@ -93,6 +94,7 @@ export interface Roster {
   operatives: Operative[]
   psychicPowers: PsychicPower[]
   fireteams: string[]
+  isRoster?: boolean
 }
 
 export enum Archetype {
