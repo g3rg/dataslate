@@ -7,8 +7,8 @@ import { RuleList } from './RuleList'
 import { PowerList } from './PowerList'
 import hash from 'node-object-hash'
 import _ from 'lodash'
-import { FactionSpecificData } from './FactionSpecificData'
 import { RosterSelection } from './RosterSelection'
+import { FactionSpecificData } from './FactionSpecificData/FactionSpecificData'
 
 interface Props {
   name: string
@@ -29,7 +29,7 @@ const groupByDatacard = (operatives: Operative[], selectedOperatives: string[]):
   return _.map(groupedOperatives, (ops, hash) => ({
     ...ops[0],
     name: ops[0].datacard,
-    operativeNames: ops.map((op) => (op.name)).sort()
+    operativeNames: ops.map((c) => (c.name)).sort((a, b) => a.localeCompare(b))
   }))
 }
 
@@ -69,70 +69,23 @@ export function Roster (props: Props): JSX.Element {
           <CloseButton onClose={props.onClose} />
         </Col>
       </h1>
-      <Carousel className={carouselClassName} interval={null} touch controls indicators={false}>
-        {(props.isRoster ?? false) && (
-          <Carousel.Item>
-            <Card className={rosterClassName}>
-              <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Roster</Card.Header>
-              <Card.Body>
-                <RosterSelection operatives={props.operatives} selectedOperatives={selectedOperatives} setSelectedOperatives={updateSelectedOperatives} />
-              </Card.Body>
-            </Card>
-          </Carousel.Item>
-        )}
-        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
-          <Carousel.Item key={index}>
-            <Datasheet datacard={datacard} showWoundTrack={props.showWoundTrack} />
-          </Carousel.Item>
-        ))}
-        <Carousel.Item>
-          <Card>
-            <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
-            <Card.Body>
-              <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
-            </Card.Body>
-          </Card>
-        </Carousel.Item>
-        {props.psychicPowers.length > 0 &&
-          <Carousel.Item>
-            <Card>
-              <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-              <Card.Body>
-                <PowerList powers={props.psychicPowers} />
-              </Card.Body>
-            </Card>
-          </Carousel.Item>}
-        <Carousel.Item>
-          <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
-        </Carousel.Item>
-      </Carousel>
-      <div className={nonCarouselClassName}>
-        {(props.isRoster ?? false) && (
-          <Card className={rosterClassName}>
-            <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Roster</Card.Header>
-            <Card.Body>
-              <RosterSelection operatives={props.operatives} selectedOperatives={selectedOperatives} setSelectedOperatives={updateSelectedOperatives} />
-            </Card.Body>
-          </Card>
-        )}
-        {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard, index) => (
-          <Datasheet key={index} datacard={datacard} showWoundTrack={props.showWoundTrack} />
-        ))}
+      {_.orderBy(datacards, ['leader', 'name'], ['desc', 'asc']).map((datacard: Datacard) => (
+        <Datasheet key={datacard.name} datacard={datacard} showWoundTrack={props.showWoundTrack} />
+      ))}
+      <Card>
+        <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
+        <Card.Body>
+          <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
+        </Card.Body>
+      </Card>
+      {props.psychicPowers.length > 0 &&
         <Card>
-          <Card.Header style={{ ...headingStyle, breakBefore: 'always' }} as='h2'>Rules</Card.Header>
+          <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
           <Card.Body>
-            <RuleList rules={_.uniqBy(_.flatten(datacards.map((m) => (m.rules))), 'name')} />
+            <PowerList powers={props.psychicPowers} />
           </Card.Body>
-        </Card>
-        {props.psychicPowers.length > 0 &&
-          <Card>
-            <Card.Header style={{ ...headingStyle }} as='h2'>Psychic Powers</Card.Header>
-            <Card.Body>
-              <PowerList powers={props.psychicPowers} />
-            </Card.Body>
-          </Card>}
-        <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
-      </div>
+        </Card>}
+      <FactionSpecificData faction={props.faction} fireteams={props.fireteams} />
     </>
   )
 }

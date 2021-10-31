@@ -6,11 +6,11 @@
     "@sentry/react": "^6.13.3",
     "@sentry/tracing": "^6.13.3",
     "@types/jest": "^27.0.2",
-    "@types/lodash": "^4.14.175",
-    "@types/node": "^16.11.0",
+    "@types/lodash": "^4.14.176",
+    "@types/node": "^16.11.6",
     "@types/react": "^16.14.17",
     "@types/react-dom": "^16.9.8",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^4.6.1",
     "jquery": "^3.6.0",
     "jszip": "^3.7.0",
     "lodash": "^4.17.21",
@@ -24,7 +24,7 @@
     "react-bootstrap-slider": "^3.0.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.4.2",
-    "react-markdown": "^7.0.1",
+    "react-markdown": "^7.1.0",
     "react-router-dom": "^5.3.0",
     "react-string-replace": "^0.4.4",
     "rehype-raw": "^6.1.0",
@@ -59,7 +59,7 @@
   },
   "homepage": "https://dataslate.rocks",
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.1",
+    "@types/react-router-dom": "^5.3.2",
     "@types/react-test-renderer": "^17.0.1",
     "@types/uuid": "^8.3.1",
     "@types/xmldom": "^0.1.31",
@@ -68,7 +68,7 @@
     "react-test-renderer": "^16.13.1",
     "ts-standard": "^10.0.0"
   },
-  "standard": {
+  "ts-standard": {
     "env": [
       "jest",
       "es6",
@@ -76,7 +76,8 @@
     ],
     "ignore": [
       "build/*",
-      "docs/*"
+      "docs/*",
+      "src/react-app-env.d.ts"
     ]
   },
   "jest": {

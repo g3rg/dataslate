@@ -1,8 +1,10 @@
 import { Ability } from './Ability'
 
 export interface Action {
+  id: string
   name: string
   cost: number
+  intro?: string
   description: string
 }
 
@@ -17,6 +19,7 @@ export interface Stats {
 }
 
 export interface Weapon {
+  id: string
   name: string
   melee: boolean
   attacks: number
@@ -28,6 +31,7 @@ export interface Weapon {
 }
 
 export interface PsychicPower {
+  id: string
   name: string
   description: string
   weapon: Weapon | null
@@ -48,6 +52,7 @@ export interface TacOp {
 }
 
 export interface Equipment {
+  id: string
   name: string
   cost: number
   description: string | null
@@ -102,11 +107,4 @@ export enum Archetype {
 
 export interface FireteamArchetypes {
   [key: string]: Archetype[]
-}
-
-export interface FactionSpecificData {
-  name: string
-  strategicPloys: Ploy[]
-  tacticalPloys: Ploy[]
-  archetypes: FireteamArchetypes
 }
